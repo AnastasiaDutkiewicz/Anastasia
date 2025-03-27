@@ -101,21 +101,23 @@ data$ReviewBody <- as.character(data$ReviewBody)  %>%
                             {gsub(" +"," ", .)} %>%                         
   {gsub("\\.+","\\.", .)}
 
-#Remove punctuation
+# Remove punctuation
 data$ReviewBody <- gsub("[[:punct:]]", "", data$ReviewBody)
 
-#Remove Stop words
-review_words <- data |>
+data1 <- data
+
+# Remove Stop words
+data2 <- data |>
   unnest_tokens(word, ReviewBody)
 
 data(stop_words)
 
-review_words <- review_words |> 
+data2 <- data2 |> 
   anti_join(stop_words)
 
-#Stemming
-review_words$word <- wordStem(review_words$word, 
-                              language = "porter")
+# Stemming
+data2$word <- wordStem(data2$word, 
+                              language = "english")
 
-counts <- review_words |>
+count_data2 <- data2 |>
             count(word, sort=TRUE)
