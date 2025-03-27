@@ -22,10 +22,21 @@ data_pun <- data %>%
   mutate(ReviewBody = str_squish(ReviewBody))   # Remove extra spaces
 
 # Completely Cleaned Version CHATGPT
+#FULLY CLEANED
 data_cleaned <- data %>%
   mutate(ReviewBody = tolower(ReviewBody)) %>%  # Convert to lowercase
-  mutate(ReviewBody = removePunctuation(ReviewBody)) %>%  # Remove punctuation
-  mutate(ReviewBody = removeNumbers(ReviewBody)) %>%  # Remove numbers
+  mutate(ReviewBody = str_replace_all(ReviewBody, ":( |-|o)*\\(", " SADSMILE ")) %>%  # Find :( or :-( or : ( or :o(
+  mutate(ReviewBody = str_replace_all(ReviewBody, ":( |-|o)*\\)", " HAPPYSMILE ")) %>% # Find :) or :-) or : ) or :o)
+  mutate(ReviewBody = str_replace_all(ReviewBody, "\\$ ?[0-9]*[\\.,]*[0-9]+", " DOLLARVALUE ")) %>% # Replace dollar values
+  mutate(ReviewBody = str_replace_all(ReviewBody, "[0-9]*[\\.,]*[0-9]+", " NUMBER ")) %>%  # Replace all numbers
+  mutate(ReviewBody = str_replace_all(ReviewBody, "([0-9]+:)*[0-9]+ *am", " TIME_AM ")) %>%  # Replace AM time
+  mutate(ReviewBody = str_replace_all(ReviewBody, "([0-9]+:)*[0-9]+ *pm", " TIME_PM ")) %>%  # Replace PM time
+  mutate(ReviewBody = str_replace_all(ReviewBody, "-+:-+", " TIME ")) %>%  # Replace general time
+  mutate(ReviewBody = str_replace_all(ReviewBody, "&", " and ")) %>%  # Replace &
+  mutate(ReviewBody = str_replace_all(ReviewBody, "-+", " ")) %>%  # Remove hyphens
+  mutate(ReviewBody = removePunctuation(ReviewBody)) %>%  # Remove remaining punctuation
+  mutate(ReviewBody = removeNumbers(ReviewBody)) %>%  # Remove any remaining numbers
+  mutate(ReviewBody = str_squish(ReviewBody)) %>%  # Remove extra spaces
   unnest_tokens(word, ReviewBody) %>%  # Tokenization
   anti_join(stop_words, by = "word") %>%  # Remove stop words
   mutate(word = wordStem(word))  # Apply stemming
