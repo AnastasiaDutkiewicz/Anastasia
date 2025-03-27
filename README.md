@@ -46,3 +46,13 @@ print(paste("Number of unique words:", nrow(counts)))
 
 # View top 10 words
 head(counts, 10)
+
+
+
+
+#anas this does all at once but it is less clear to a human reader
+#Remove punctuation and lowercase
+data_clean <- data %>%
+  mutate(ReviewBody = str_to_lower(ReviewBody),
+         ReviewBody = str_replace_all(ReviewBody, "[[:punct:]]", ""))  #this adds spacing, lowecase , and gets rid of commas, points and so on
+
