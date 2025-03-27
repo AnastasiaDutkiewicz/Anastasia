@@ -80,3 +80,42 @@ data_clean <- data %>%
   mutate(ReviewBody = str_to_lower(ReviewBody),
          ReviewBody = str_replace_all(ReviewBody, "[[:punct:]]", ""))  #this adds spacing, lowecase , and gets rid of commas, points and so on
 
+# MARGHE CODE
+# Clean data
+data$ReviewBody <- as.character(data$ReviewBody)  %>% 
+                            tolower() %>% 
+                            {gsub(":( |-|o)*\\("," sadsmile ", .)} %>%     
+                            {gsub(":( |-|o)*\\)"," happysmile ", .)} %>%  
+                            {gsub("(\"| |\\$)-+\\.-+","number", .)} %>%    
+                            {gsub("([0-9]+:)*[0-9]+ *am"," time_am", .)} %>%  
+                            {gsub("([0-9]+:)*[0-9]+ *pm","time_pm", .)} %>% 
+                            {gsub("-+:-+","time", .)} %>%                    
+                            {gsub("\\$ ?[0-9]*[\\.,]*[0-9]+"," dollarvalue ", .)} %>%   
+                            {gsub("[0-9]*[\\.,]*[0-9]+"," number ", .)} %>% 
+                            {gsub("-"," ", .)} %>%                         
+                            {gsub("&"," and ", .)} %>%                      
+                            {gsub("\"+"," ", .)} %>%                    
+                            {gsub("\\|+"," ", .)} %>%                      
+                            {gsub("_+"," ", .)} %>%                        
+                            {gsub(";+"," ", .)} %>%                      
+                            {gsub(" +"," ", .)} %>%                         
+  {gsub("\\.+","\\.", .)}
+
+#Remove punctuation
+data$ReviewBody <- gsub("[[:punct:]]", "", data$ReviewBody)
+
+#Remove Stop words
+review_words <- data |>
+  unnest_tokens(word, ReviewBody)
+
+data(stop_words)
+
+review_words <- review_words |> 
+  anti_join(stop_words)
+
+#Stemming
+review_words$word <- wordStem(review_words$word, 
+                              language = "porter")
+
+counts <- review_words |>
+            count(word, sort=TRUE)
