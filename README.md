@@ -65,10 +65,10 @@ words <- words |>
   mutate(stemmed_word = wordStem(word, language = "en"))
 
 #Count occurrences of stemmed words
-counts <- words |> count(stemmed_word, sort=TRUE)
+counts_stemmed <- words |> count(stemmed_word, sort=TRUE)
 
 #View top 10 most frequent stemmed words
-head(counts, 10)
+head(counts_stemmed, 10)
 
 
 
