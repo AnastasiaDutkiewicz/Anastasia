@@ -29,3 +29,20 @@ data_cleaned <- data %>%
   unnest_tokens(word, ReviewBody) %>%  # Tokenization
   anti_join(stop_words, by = "word") %>%  # Remove stop words
   mutate(word = wordStem(word))  # Apply stemming
+
+# Olivia stemming (chat)
+# Apply stemming
+words <- words |> 
+  mutate(stemmed_word = wordStem(word, language = "en")) 
+
+# Print the number of words
+print(paste("Number of words:", nrow(words)))
+
+# Count occurrences of stemmed words
+counts <- words |> count(stemmed_word, sort=TRUE)
+
+# Print the number of unique stemmed words
+print(paste("Number of unique words:", nrow(counts)))
+
+# View top 10 words
+head(counts, 10)
