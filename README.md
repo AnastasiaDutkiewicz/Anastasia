@@ -42,21 +42,34 @@ data_cleaned <- data %>%
   mutate(word = wordStem(word))  # Apply stemming
 
 # Olivia stemming (chat)
-# Apply stemming
+#Load required libraries
+if (!require(pacman)) {
+    install.packages("pacman")
+}
+pacman::p_load(tidyverse, ggplot2, tokenizers, tidytext, tm, stringi, ggrepel, SnowballC, stopwords)
+
+#Read the dataset
+data <- read.csv("BA_AirlineReviews.csv")
+data2 <- data[, c(2, 7, 16)]
+
+#Tokenize text into words
+words <- data2 |> 
+  unnest_tokens(word, ReviewBody, to_lower=TRUE)  # Convert to lowercase
+
+#Remove stopwords (English)
 words <- words |> 
-  mutate(stemmed_word = wordStem(word, language = "en")) 
+  filter(!word %in% stopwords("en")) 
 
-# Print the number of words
-print(paste("Number of words:", nrow(words)))
+#Apply stemming
+words <- words |> 
+  mutate(stemmed_word = wordStem(word, language = "en"))
 
-# Count occurrences of stemmed words
+#Count occurrences of stemmed words
 counts <- words |> count(stemmed_word, sort=TRUE)
 
-# Print the number of unique stemmed words
-print(paste("Number of unique words:", nrow(counts)))
-
-# View top 10 words
+#View top 10 most frequent stemmed words
 head(counts, 10)
+
 
 
 
