@@ -74,7 +74,7 @@ head(counts, 10)
 
 
 
-#anas this does all at once but it is less clear to a human reader
+# anas this does all at once but it is less clear to a human reader
 #Remove punctuation and lowercase
 data_clean <- data %>%
   mutate(ReviewBody = str_to_lower(ReviewBody),
