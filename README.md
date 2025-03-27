@@ -21,7 +21,7 @@ data_pun <- data %>%
   mutate(ReviewBody = tolower(ReviewBody)) %>%  # Convert to lowercase
   mutate(ReviewBody = str_squish(ReviewBody))   # Remove extra spaces
 
-# Completely Cleaned Version CHATGPT
+# Completely Cleaned Version
 #FULLY CLEANED
 data_cleaned <- data %>%
   mutate(ReviewBody = tolower(ReviewBody)) %>%  # Convert to lowercase
@@ -40,6 +40,10 @@ data_cleaned <- data %>%
   unnest_tokens(word, ReviewBody) %>%  # Tokenization
   anti_join(stop_words, by = "word") %>%  # Remove stop words
   mutate(word = wordStem(word))  # Apply stemming
+
+#Word Frequencies
+word_frequencies <- data_cleaned %>%
+  count(word, sort = TRUE)  # Count the occurrences of each word
 
 # Olivia stemming (chat)
 #Load required libraries
