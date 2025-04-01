@@ -35,11 +35,11 @@ run_slow_parts = TRUE
 data1 <- data
 if (run_slow_parts) { 
     for (j in 1:nrow(data1)) {
-        stemmed_description <- data1[j,] |> 
+        remove_stopwords <- data1[j,] |> 
                                 unnest_tokens(word, ReviewBody, drop=FALSE, to_lower=TRUE) |> 
                                 anti_join(stop_words) |> 
                                 pull(word)
-        data1[j, "ReviewBody"] <- paste(stemmed_description, collapse = " ")
+        data1[j, "ReviewBody"] <- paste(remove_stopwords, collapse = " ")
     }
 }
 
