@@ -30,21 +30,20 @@ data$ReviewBody <- as.character(data$ReviewBody)  %>%
 # Remove punctuation 
 data$ReviewBody <- gsub("[[:punct:]]", "", data$ReviewBody)
 
-# Data 1a
+# Data 1
 run_slow_parts = TRUE
-data2.stemmed <- data
+data1 <- data
 if (run_slow_parts) { 
-    for (j in 1:nrow(data2.stemmed)) {
-        stemmed_description <- data2.stemmed[j,] |> 
+    for (j in 1:nrow(data1)) {
+        stemmed_description <- data1[j,] |> 
                                 unnest_tokens(word, ReviewBody, drop=FALSE, to_lower=TRUE) |> 
                                 anti_join(stop_words) |> 
-                                pull(word) |> 
-                                wordStem(language = "english")
-        data2.stemmed[j, "ReviewBody"] <- paste(stemmed_description, collapse = " ")
+                                pull(word)
+        data1[j, "ReviewBody"] <- paste(stemmed_description, collapse = " ")
     }
 }
 
-# Data 1b (stemming)
+# Data 2 (stemming)
 run_slow_parts = TRUE
 data2.stemmed <- data
 if (run_slow_parts) { 
