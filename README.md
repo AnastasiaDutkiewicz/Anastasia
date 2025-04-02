@@ -58,7 +58,33 @@ if (run_slow_parts) {
 }
 
 
+# Removing infrequent words
+review_words <- data2 %>%
+  unnest_tokens(word, ReviewBody)
 
+counts <- review_words %>% 
+  count(word, sort=TRUE) 
+
+infrequent <- counts %>% 
+  filter(n < 0.01 * nrow(data2))
+toremove <- infrequent
+
+if (run_slow_parts) {
+    for (j in 1:nrow(data2)) {
+        Infrequent_word <- data2[j,] %>% 
+                          unnest_tokens(word, ReviewBody, to_lower=TRUE) %>% 
+                          anti_join(toremove)
+        
+        data2[j, "ReviewBody"] <- paste(Infrequent_word[,"word"], collapse = " ")
+    }
+} 
+
+
+review_tdm <- data2 %>%
+  unnest_tokens(word, ReviewBody) %>%
+  count(word, X, sort = TRUE) %>%
+  ungroup() %>%
+  cast_tdm(word, X, n)
 
 
 
