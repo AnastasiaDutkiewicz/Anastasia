@@ -63,8 +63,8 @@ if (run_slow_parts) {
 
 
 
-# without stemming and including punctuation
-# 3A
+# 3A without stemming and including punctuation
+
 
 ####stemming
 
@@ -79,7 +79,7 @@ data1$sentiment_cat <- case_when(
   data1$syuzhet_score > 0 ~ "Positive",
   data1$syuzhet_score < 0 ~ "Negative",)
 
-# Contingency table against "Recommended"
+#Contingency table against "Recommended"
 table(data1$Recommended, data1$sentiment_cat)
 
 #Visualization
