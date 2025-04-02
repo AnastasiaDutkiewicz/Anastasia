@@ -56,3 +56,34 @@ if (run_slow_parts) {
         data2.stemmed[j, "ReviewBody"] <- paste(stemmed_description, collapse = " ")
     }
 }
+
+
+
+
+
+
+
+# without stemming and including punctuation
+# 3A
+
+####stemming
+
+#Dictionary-Based Sentiment Analysis (SYUZHET)
+library(syuzhet)
+
+#Dictionary-based sentiment score
+data1$syuzhet_score <- get_sentiment(data1$ReviewBody, method = "syuzhet")
+
+#Categorize polarity
+data1$sentiment_cat <- case_when(
+  data1$syuzhet_score > 0 ~ "Positive",
+  data1$syuzhet_score < 0 ~ "Negative",)
+
+# Contingency table against "Recommended"
+table(data1$Recommended, data1$sentiment_cat)
+
+#Visualization
+ggplot(data1, aes(x = Recommended, fill = sentiment_cat)) +
+  geom_bar(position = "fill") +
+  labs(title = "Dictionary Sentiment vs Recommendation", y = "Proportion", x = "Recommended") +
+  theme_minimal()
