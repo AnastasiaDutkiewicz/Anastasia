@@ -113,3 +113,27 @@ ggplot(data1, aes(x = Recommended, fill = sentiment_cat)) +
   geom_bar(position = "fill") +
   labs(title = "Dictionary Sentiment vs Recommendation", y = "Proportion", x = "Recommended") +
   theme_minimal()
+
+
+
+library(sentimentr)
+
+# Sentiment analysis with amplification (3B)
+sentiment_with_amp <- sentiment_by(data1$ReviewBody)
+
+# Sentiment analysis ignoring amplification
+sentiment_no_amp <- sentiment_by(data1$ReviewBody, amplifier.weight = 0)
+
+# Compare the results
+comparison <- data.frame(
+  Sentiment_With_Amp = sentiment_with_amp$ave_sentiment,
+  Sentiment_No_Amp = sentiment_no_amp$ave_sentiment
+)
+
+# Visualization
+ggplot(comparison, aes(x = Sentiment_With_Amp, y = Sentiment_No_Amp)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
+  labs(title = "Effect of Amplification on Sentiment Scores",
+       x = "Sentiment With Amplification",
+       y = "Sentiment Without Amplification")
