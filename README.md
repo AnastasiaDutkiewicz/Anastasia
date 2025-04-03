@@ -121,16 +121,16 @@ library(sentimentr)
 # Sentiment analysis with amplification (3B)
 sentiment_with_amp <- sentiment_by(data1$ReviewBody)
 
-# Sentiment analysis ignoring amplification
+#Sentiment analysis ignoring amplification
 sentiment_no_amp <- sentiment_by(data1$ReviewBody, amplifier.weight = 0)
 
-# Compare the results
+#Compare the results
 comparison <- data.frame(
   Sentiment_With_Amp = sentiment_with_amp$ave_sentiment,
   Sentiment_No_Amp = sentiment_no_amp$ave_sentiment
 )
 
-# Visualization
+#Visualization
 ggplot(comparison, aes(x = Sentiment_With_Amp, y = Sentiment_No_Amp)) +
   geom_point() +
   geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
